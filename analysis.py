@@ -257,5 +257,51 @@ fig.tight_layout()
 fig.savefig(OUT / "auction_profit_baseline_vs_v1.png", facecolor="white")
 plt.close(fig)
 
+
+# ---------------------------------------------------------------- Table images
+def table_image(header, rows, path, bold_last=False, col_widths=None):
+    """Draw a clean black-on-white table and save it as a PNG for the slides."""
+    n_cols = len(header)
+    col_widths = col_widths or [1.0 / n_cols] * n_cols
+    fig, ax = plt.subplots(figsize=(8, 0.5 * (len(rows) + 1) + 0.1), dpi=200)
+    ax.axis("off")
+    tbl = ax.table(cellText=rows, colLabels=header, colWidths=col_widths,
+                   cellLoc="left", colLoc="left", loc="center", edges="horizontal")
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(13)
+    tbl.scale(1, 2.1)
+    for (r, c), cell in tbl.get_celld().items():
+        cell.set_edgecolor(AXIS)
+        cell.set_linewidth(0.8)
+        cell.PAD = 0.04
+        if r == 0:
+            cell.set_text_props(color=MUTED)
+        if bold_last and r == len(rows):
+            cell.set_text_props(fontweight="bold", color=INK)
+    fig.savefig(path, facecolor="white", bbox_inches="tight", pad_inches=0.05)
+    plt.close(fig)
+
+
+def dollars(v):
+    return f"{'−' if v < 0 else '+'}${abs(v):,.0f}"
+
+
+base_row, v1_row = fit_results.iloc[0], fit_results.iloc[1]
+table_image(
+    ["72 test cars", "R²", "Typical error"],
+    [["Baseline (average price)", f"{base_row.test_R2:.2f}".replace("-", "−"), f"${base_row.test_RMSE_dollars:,.0f}"],
+     ["v1 model", f"{v1_row.test_R2:.2f}", f"${v1_row.test_RMSE_dollars:,.0f}"]],
+    OUT / "table_test_fit.png", col_widths=[0.5, 0.2, 0.3],
+)
+
+b, v = decision_results.iloc[0], decision_results.iloc[1]
+table_image(
+    ["40 auction cars", "Bought", "Lost money", "Total profit"],
+    [["Baseline (average price)", b.cars_bought, b.money_losing_cars_bought, dollars(b.total_profit_dollars)],
+     ["v1 model", v.cars_bought, v.money_losing_cars_bought, dollars(v.total_profit_dollars)],
+     ["Difference", "", "", dollars(v.total_profit_dollars - b.total_profit_dollars)]],
+    OUT / "table_auction_results.png", bold_last=True, col_widths=[0.44, 0.15, 0.19, 0.22],
+)
+
 print("=" * 70)
 print(f"Saved chart and tables to {OUT}")

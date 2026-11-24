@@ -9,7 +9,7 @@ Dep. Variable:             Sale_Price   R-squared:                       0.873
 Model:                            OLS   Adj. R-squared:                  0.869
 Method:                 Least Squares   F-statistic:                     222.7
 Date:                Tue, 24 Nov 2026   Prob (F-statistic):           1.19e-70
-Time:                        09:09:36   Log-Likelihood:                -1559.5
+Time:                        09:51:04   Log-Likelihood:                -1559.5
 No. Observations:                 168   AIC:                             3131.
 Df Residuals:                     162   BIC:                             3150.
 Df Model:                           5                                         
@@ -42,7 +42,7 @@ Dep. Variable:             Sale_Price   R-squared:                       0.873
 Model:                            OLS   Adj. R-squared:                  0.870
 Method:                 Least Squares   F-statistic:                     280.0
 Date:                Tue, 24 Nov 2026   Prob (F-statistic):           6.78e-72
-Time:                        09:09:36   Log-Likelihood:                -1559.5
+Time:                        09:51:04   Log-Likelihood:                -1559.5
 No. Observations:                 168   AIC:                             3129.
 Df Residuals:                     163   BIC:                             3145.
 Df Model:                           4                                         
