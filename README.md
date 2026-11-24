@@ -34,3 +34,6 @@ The 70/30 split uses a fixed random seed (42), so every run gives the same numbe
 | `auction_decisions.csv` | Each auction lot: prediction, both decisions, profit if bought |
 | `auction_results_baseline_vs_v1.csv` | Cars bought, money-losers, total profit per rule |
 | `predicted_vs_actual_test_cars.png` | Chart: predicted vs actual sale price, 72 test cars |
+| `auction_profit_baseline_vs_v1.png` | Chart: total profit on the 40 auction lots, baseline rule vs v1 rule |
+
+Both charts are drawn by `analysis.py` (bottom of the file).

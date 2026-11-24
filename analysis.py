@@ -203,7 +203,9 @@ ax.scatter(test_actual, test_v1, s=36, color=SERIES_1, edgecolor="white", linewi
 ax.set_xlim(lo, hi)
 ax.set_ylim(lo, hi)
 ax.set_aspect("equal")
-money = matplotlib.ticker.FuncFormatter(lambda v, _: f"${v/1000:.0f}k")
+money = matplotlib.ticker.FuncFormatter(
+    lambda v, _: "$0" if v == 0 else f"{'−' if v < 0 else ''}${abs(v)/1000:.0f}k"
+)
 ax.xaxis.set_major_formatter(money)
 ax.yaxis.set_major_formatter(money)
 ax.set_xlabel("Actual sale price", color=INK)
@@ -218,5 +220,42 @@ ax.tick_params(colors=MUTED)
 ax.legend(loc="upper left", frameon=False, fontsize=9)
 fig.tight_layout()
 fig.savefig(OUT / "predicted_vs_actual_test_cars.png", facecolor="white")
+plt.close(fig)
+
+# ---------------------------------------------------------------- Chart 2
+# Total profit on the 40 auction lots, baseline rule vs v1 rule.
+rules = ["Baseline rule\n(average price)", "v1 rule\n(regression)"]
+profits = decision_results["total_profit_dollars"].tolist()
+bought = decision_results["cars_bought"].tolist()
+losers = decision_results["money_losing_cars_bought"].tolist()
+
+fig, ax = plt.subplots(figsize=(7, 4.5), dpi=200)
+bars = ax.bar(rules, profits, width=0.5, color=[MUTED, SERIES_1], zorder=2)
+ax.axhline(0, color=INK, linewidth=1, zorder=3)
+span = max(profits) - min(profits)
+for bar, p, b, l in zip(bars, profits, bought, losers):
+    sign = "+" if p > 0 else "−"
+    offset = span * 0.04
+    y = p + offset if p >= 0 else p - offset
+    ax.text(bar.get_x() + bar.get_width() / 2, y, f"{sign}${abs(p):,}",
+            ha="center", va="bottom" if p >= 0 else "top",
+            fontsize=13, fontweight="bold", color=INK)
+    ax.text(bar.get_x() + bar.get_width() / 2, -span * 0.02 if p >= 0 else span * 0.02,
+            f"{b} bought, {l} lost money",
+            ha="center", va="top" if p >= 0 else "bottom", fontsize=9, color=MUTED)
+ax.set_ylim(min(profits) - span * 0.25, max(profits) + span * 0.2)
+ax.yaxis.set_major_formatter(money)
+ax.set_ylabel("Total profit on 40 auction cars", color=INK)
+ax.grid(axis="y", color=GRID, linewidth=0.8)
+ax.set_axisbelow(True)
+for side in ("top", "right", "bottom"):
+    ax.spines[side].set_visible(False)
+ax.spines["left"].set_color(AXIS)
+ax.tick_params(axis="y", colors=MUTED)
+ax.tick_params(axis="x", length=0, colors=INK, labelsize=11, pad=8)
+fig.tight_layout()
+fig.savefig(OUT / "auction_profit_baseline_vs_v1.png", facecolor="white")
+plt.close(fig)
+
 print("=" * 70)
 print(f"Saved chart and tables to {OUT}")
