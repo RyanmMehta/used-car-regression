@@ -1,0 +1,3 @@
+model,test_R2,test_RMSE_dollars
+Baseline (training average),-0.0137,6494.154
+v1 (regression),0.8227,2716.1433
